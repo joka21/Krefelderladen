@@ -1,20 +1,23 @@
 import { getVendorById } from '@/lib/vendors';
 
 interface VendorPageProps {
-  params: { id: string }; // Typ explizit angeben
+  params: { id: string };
 }
 
 export default async function VendorPage({ params }: VendorPageProps) {
+  // Lade den Anbieter basierend auf der ID
   const vendor = await getVendorById(params.id);
 
-  if (!vendor) return <div>Anbieter nicht gefunden</div>;
+  if (!vendor) {
+    return <div>Anbieter nicht gefunden</div>;
+  }
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">{vendor.name}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          {/* Verwende Next.js' <Image /> für bessere Optimierung */}
+          {/* Verwende <Image /> von Next.js */}
           <img src={vendor.images.coverImage} alt={vendor.name} className="w-full rounded-lg" />
         </div>
         <div>
@@ -40,4 +43,3 @@ export default async function VendorPage({ params }: VendorPageProps) {
     </div>
   );
 }
-

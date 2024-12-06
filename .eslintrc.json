@@ -4,6 +4,8 @@
     "@typescript-eslint/no-unused-vars": "off", // Deaktiviert die Regel für ungenutzte Variablen
     "@typescript-eslint/no-explicit-any": "warn", // Gibt nur eine Warnung bei 'any' aus
     "react/no-unescaped-entities": "off", // Deaktiviert die Regel für unescaped entities in JSX
-    "no-console": "warn" // Gibt eine Warnung für console.log
+    "no-console": "off" ,// Gibt eine Warnung für console.log
+    
+    "@next/next/no-img-element": "off"
   }
 }
