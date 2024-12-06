@@ -10,9 +10,14 @@ import {
   signOut,
 } from 'firebase/auth';
 import { app } from '@/lib/firebase';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+
+export type CustomUser = User & {
+  role?: string;
+};
 
 export type AuthContextType = {
-  user: User | null;
+  user: CustomUser | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -22,20 +27,41 @@ export type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthContextProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<CustomUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!app || typeof window === 'undefined') return;
 
     const auth = getAuth(app);
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const role = await getUserRole(user.uid);
+        if (role) {
+          setUser({ ...user, role });
+        } else {
+          console.warn('Benutzerrolle konnte nicht geladen werden.');
+          setUser({ ...user, role: 'user' }); // Standardrolle zuweisen, wenn keine Rolle gefunden wird
+        }
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
+
+  const getUserRole = async (uid: string): Promise<string | null> => {
+    const db = getFirestore(app);
+    const userDoc = doc(db, 'users', uid);
+    const docSnap = await getDoc(userDoc);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data.role || null;
+    }
+    return null;
+  };
 
   const login = async (email: string, password: string) => {
     if (!app) {

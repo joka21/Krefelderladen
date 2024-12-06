@@ -13,9 +13,9 @@ const firebaseConfig = {
   appId: "1:621839073526:web:c437a1f48ce40cd2d7acd7"
 };
 
-let app: FirebaseApp | undefined = undefined;
+// Initialize Firebase
+let app: FirebaseApp;
 
-// Überprüfen, ob wir im Browser sind
 if (typeof window !== 'undefined') {
   if (!getApps().length) {
     app = initializeApp(firebaseConfig);
@@ -24,7 +24,7 @@ if (typeof window !== 'undefined') {
   }
 }
 
-const db = app ? getFirestore(app) : undefined;
-const auth = app ? getAuth(app) : undefined;
+const db = getFirestore(app!);
+const auth = getAuth(app!);
 
 export { db, auth, app };
