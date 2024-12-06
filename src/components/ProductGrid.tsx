@@ -3,6 +3,7 @@
 import { collection, query, getDocs, limit, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
+import { Firestore } from 'firebase/firestore';
 
 interface Product {
   id: string;
@@ -28,35 +29,39 @@ export default function ProductGrid({ selectedCategory }: {
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      try {
+        if (!db) {
+          console.error('Firestore database is not initialized.');
+          setLoading(false);
+          return;
+        }
         let q;
-        if (selectedCategory) {
-          q = query(
-            collection(db, 'products'),
-            where('category', '==', selectedCategory),
-            limit(20)
-          );
-        } else {
-          q = query(collection(db, 'products'), limit(20));
+        try {
+          if (selectedCategory) {
+            q = query(
+              collection(db, 'products'),
+              where('category', '==', selectedCategory),
+              limit(20)
+            );
+          } else {
+            q = query(collection(db, 'products'), limit(20));
+          }
+
+          const querySnapshot = await getDocs(q);
+          const productsList = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data() as object
+          })) as Product[];
+
+          if (!selectedCategory) {
+            productsList.sort(() => Math.random() - 0.5);
+          }
+
+          setProducts(productsList);
+        } catch (error) {
+          console.error('Fehler beim Laden der Produkte:', error);
         }
-
-        const querySnapshot = await getDocs(q);
-        const productsList = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Product[];
-
-        if (!selectedCategory) {
-          productsList.sort(() => Math.random() - 0.5);
-        }
-
-        setProducts(productsList);
-      } catch (error) {
-        console.error('Fehler beim Laden der Produkte:', error);
-      }
-      setLoading(false);
-    };
-
+        setLoading(false);
+      };
     fetchProducts();
   }, [selectedCategory]);
 
@@ -66,7 +71,7 @@ export default function ProductGrid({ selectedCategory }: {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {products.map(product => (
+      {products.map((product: Product) => (
         <div key={product.id} className="bg-white rounded-lg shadow overflow-hidden">
           <img
             src={product.images.main}

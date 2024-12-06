@@ -53,6 +53,9 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const getUserRole = async (uid: string): Promise<string | null> => {
+    if (!app) {
+      throw new Error('Firebase-App nicht initialisiert');
+    }
     const db = getFirestore(app);
     const userDoc = doc(db, 'users', uid);
     const docSnap = await getDoc(userDoc);

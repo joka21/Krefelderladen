@@ -1,30 +1,35 @@
-'use client';
+// lib/firebase.ts
+'use client'; // To indicate this should run only on the client side
 
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDnVX1QQlvQg_lVncIJgnJUSDt_atELdZI",
-  authDomain: "krefelder-laden.firebaseapp.com",
-  projectId: "krefelder-laden",
-  storageBucket: "krefelder-laden.firebasestorage.app",
-  messagingSenderId: "621839073526",
-  appId: "1:621839073526:web:c437a1f48ce40cd2d7acd7"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
 };
 
-// Initialize Firebase
-let app: FirebaseApp;
+let app: FirebaseApp | undefined;
+let db: Firestore | undefined;
+let auth;
 
 if (typeof window !== 'undefined') {
+  // Only initialize on the client side
   if (!getApps().length) {
     app = initializeApp(firebaseConfig);
   } else {
     app = getApps()[0];
   }
+
+  db = getFirestore(app);
+  auth = getAuth(app);
 }
 
-const db = getFirestore(app!);
-const auth = getAuth(app!);
-
 export { db, auth, app };
+
+
