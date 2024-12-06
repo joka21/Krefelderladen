@@ -1,11 +1,7 @@
 import { getVendorById } from '@/lib/vendors';
+import Image from 'next/image';
 
-interface VendorPageProps {
-  params: { id: string };
-}
-
-export default async function VendorPage({ params }: VendorPageProps) {
-  // Lade den Anbieter basierend auf der ID
+export default async function VendorPage({ params }: { params: Record<string, string> }) {
   const vendor = await getVendorById(params.id);
 
   if (!vendor) {
@@ -17,8 +13,13 @@ export default async function VendorPage({ params }: VendorPageProps) {
       <h1 className="text-2xl font-bold mb-4">{vendor.name}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          {/* Verwende <Image /> von Next.js */}
-          <img src={vendor.images.coverImage} alt={vendor.name} className="w-full rounded-lg" />
+          <Image
+            src={vendor.images.coverImage}
+            alt={vendor.name}
+            width={800}
+            height={600}
+            className="rounded-lg"
+          />
         </div>
         <div>
           <h2 className="text-xl font-semibold mb-2">Über uns</h2>
