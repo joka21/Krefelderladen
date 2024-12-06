@@ -1,6 +1,5 @@
-import { getVendorById } from '@/lib/vendors';
+import { getVendorById, getAllVendors } from '@/lib/vendors';
 import Image from 'next/image';
-import { GetStaticPropsContext } from 'next';
 
 interface VendorPageProps {
   params: {
@@ -52,33 +51,10 @@ export default async function VendorPage({ params }: VendorPageProps) {
   );
 }
 
-export async function getStaticProps(context: GetStaticPropsContext) {
-  const { params } = context;
-  
-  if (!params || !params.id) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      params: {
-        id: params.id as string,
-      },
-    },
-  };
-}
-
-export async function getStaticPaths() {
-  // Assuming there's a function to get all vendors
+export async function generateStaticParams() {
   const vendors = await getAllVendors();
-  const paths = vendors.map((vendor: any) => ({
-    params: { id: vendor.id },
-  }));
 
-  return {
-    paths,
-    fallback: 'blocking',
-  };
+  return vendors.map((vendor: any) => ({
+    id: vendor.id,
+  }));
 }
