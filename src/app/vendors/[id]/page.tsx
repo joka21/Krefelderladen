@@ -1,6 +1,12 @@
 import { getVendorById } from '@/lib/vendors';
 
-export default async function VendorPage({ params }: { params: { id: string } }) {
+interface VendorPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function VendorPage({ params }: VendorPageProps) {
   const vendor = await getVendorById(params.id);
 
   if (!vendor) return <div>Anbieter nicht gefunden</div>;
