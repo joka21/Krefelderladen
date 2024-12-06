@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import CategoryNav from '@/components/CategoryNav';
 import ProductGrid from '@/components/ProductGrid';
-import { createInitialVendors } from '../lib/vendors';
-import VendorList from '../components/VendorList';
+
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

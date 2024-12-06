@@ -16,7 +16,7 @@ export default function Login() {
     try {
       await login(email, password);
       router.push('/');
-    } catch (err) {
+    } catch {
       setError('Anmeldung fehlgeschlagen');
     }
   };
