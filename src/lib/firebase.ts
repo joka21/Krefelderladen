@@ -1,25 +1,27 @@
-// lib/firebase.ts
-'use client'; // To indicate this should run only on the client side
+/// lib/firebase.ts
+'use client';
 
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth, Auth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyDnVX1QQlvQg_lVncIJgnJUSDt_atELdZI",
+  authDomain: "krefelder-laden.firebaseapp.com",
+  projectId: "krefelder-laden",
+  storageBucket: "krefelder-laden.firebasestorage.app",
+  messagingSenderId: "621839073526",
+  appId: "1:621839073526:web:c437a1f48ce40cd2d7acd7"
 };
 
-let app: FirebaseApp | undefined;
-let db: Firestore | undefined;
-let auth;
+
+
+let app: FirebaseApp;
+let db: Firestore;
+let auth: Auth;
 
 if (typeof window !== 'undefined') {
-  // Only initialize on the client side
+  // Ensure Firebase is only initialized once
   if (!getApps().length) {
     app = initializeApp(firebaseConfig);
   } else {
@@ -28,8 +30,8 @@ if (typeof window !== 'undefined') {
 
   db = getFirestore(app);
   auth = getAuth(app);
+} else {
+  console.warn('Firebase services are not available on the server.');
 }
 
-export { db, auth, app };
-
-
+export { app, db, auth };
