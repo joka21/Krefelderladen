@@ -1,0 +1,32 @@
+{
+  "name": "krefelder-laden",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test:rules": "jest --detectOpenHandles",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@firebase/firestore": "^4.7.5",
+    "firebase": "^11.0.2",
+    "next": "15.0.3",
+    "react": "^19.0.0-rc-66855b96-20241106",
+    "react-dom": "^19.0.0-rc-66855b96-20241106"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20",
+    "@types/node-fetch": "^2.6.12",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.3",
+    "node-fetch": "^2.7.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
