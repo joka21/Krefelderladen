@@ -1,7 +1,13 @@
 import { getVendorById } from '@/lib/vendors';
 import Image from 'next/image';
 
-export default async function VendorPage({ params }: { params: Record<string, string> }) {
+interface VendorPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function VendorPage({ params }: VendorPageProps) {
   const vendor = await getVendorById(params.id);
 
   if (!vendor) {
