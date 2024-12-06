@@ -1,9 +1,7 @@
 import { getVendorById } from '@/lib/vendors';
 
 interface VendorPageProps {
-  params: {
-    id: string;
-  };
+  params: { id: string }; // Typ explizit angeben
 }
 
 export default async function VendorPage({ params }: VendorPageProps) {
@@ -16,6 +14,7 @@ export default async function VendorPage({ params }: VendorPageProps) {
       <h1 className="text-2xl font-bold mb-4">{vendor.name}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
+          {/* Verwende Next.js' <Image /> für bessere Optimierung */}
           <img src={vendor.images.coverImage} alt={vendor.name} className="w-full rounded-lg" />
         </div>
         <div>
@@ -29,11 +28,16 @@ export default async function VendorPage({ params }: VendorPageProps) {
           </div>
           <div className="mt-4">
             <h3 className="font-semibold">Adresse</h3>
-            <p>{vendor.address.street} {vendor.address.number}</p>
-            <p>{vendor.address.zip} {vendor.address.city}</p>
+            <p>
+              {vendor.address.street} {vendor.address.number}
+            </p>
+            <p>
+              {vendor.address.zip} {vendor.address.city}
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
