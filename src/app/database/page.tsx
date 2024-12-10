@@ -1,6 +1,1 @@
-// app/database/page.tsx
-import DatabaseAdmin from './DatabaseAdmin';
-
-export default function DatabasePage() {
-  return <DatabaseAdmin />;
-}
+export { default } from './DatabaseAdmin';

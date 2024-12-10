@@ -11,7 +11,7 @@ export default function ClientLayout({
   return (
     <AuthContextProvider>
       <header>
-        {/* Hier kommt Ihre Navigation hin */}
+        <Navigation />
       </header>
       <main>
         {children}

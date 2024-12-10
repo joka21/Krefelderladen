@@ -7,38 +7,36 @@ import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 export default function DatabaseAdmin() {
- const { user } = useAuth();
- const router = useRouter();
- const [isAdmin, setIsAdmin] = useState(false);
- const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
- useEffect(() => {
-   const checkAdmin = async () => {
-     if (!user || !db) {
-       router.push('/');
-       return;
-     }
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
 
-     try {
-       const userDoc = await getDoc(doc(db, 'users', user.uid));
-       const isUserAdmin = userDoc.data()?.role === 'admin';
-       
-       if (!isUserAdmin) {
-         router.push('/');
-         return;
-       }
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const isUserAdmin = userDoc.data()?.role === 'admin';
+        setIsAdmin(isUserAdmin);
+        setLoading(false);
 
-       setIsAdmin(true);
-       setLoading(false);
-     } catch (error) {
-       console.error("Fehler beim Prüfen der Admin-Rechte:", error);
-       router.push('/');
-     }
-   };
+        if (!isUserAdmin) {
+          router.push('/');
+        }
+      } catch (error) {
+        console.error("Fehler beim Prüfen der Admin-Rechte:", error);
+        setLoading(false);
+        router.push('/');
+      }
+    };
 
-   checkAdmin();
- }, [user, router]);
-
+    checkAdmin();
+  }, [user, router]);
  const initializeCategories = async () => {
    if (!db) {
      alert('Datenbank nicht verfügbar');
@@ -47,6 +45,63 @@ export default function DatabaseAdmin() {
 
    try {
      const categories = [
+       {
+         id: 'health',
+         name: "Gesundheit",
+         subcategories: {
+           pharmacy: { name: "Apotheken", typicalProducts: ["Medikamente", "Nahrungsergänzungsmittel"], standardServices: ["Beratung", "Blutdruckmessung"] },
+           fitness: { name: "Fitnessstudios", typicalProducts: ["Mitgliedschaften"], standardServices: ["Kurse", "Personal Training"] }
+         }
+       },
+       {
+         id: 'leisure',
+         name: "Freizeit",
+         subcategories: {
+           parks: { name: "Parks", typicalProducts: [], standardServices: ["Grillplätze", "Sportplätze"] },
+           cinema: { name: "Kinos", typicalProducts: ["Tickets"], standardServices: ["Filmpremieren"] }
+         }
+       },
+       {
+         id: 'handcrafts',
+         name: "Handwerk",
+         subcategories: {
+           carpentry: { name: "Schreinerei", typicalProducts: ["Möbel"], standardServices: ["Reparaturen"] },
+           painting: { name: "Maler", typicalProducts: ["Farben"], standardServices: ["Renovierungen"] }
+         }
+       },
+       {
+         id: 'services',
+         name: "Dienstleistungen",
+         subcategories: {
+           it: { name: "IT-Services", typicalProducts: ["Software"], standardServices: ["Support"] },
+           cleaning: { name: "Reinigungsdienste", typicalProducts: ["Reinigungsgeräte"], standardServices: ["Haushaltsreinigung"] }
+         }
+       },
+       {
+         id: 'shop',
+         name: "Shop",
+         subcategories: {
+           fashion: { name: "Mode", typicalProducts: ["Kleidung"], standardServices: ["Beratung"] },
+           electronics: { name: "Elektronik", typicalProducts: ["Geräte"], standardServices: ["Reparaturen"] }
+         }
+       },
+       {
+         id: 'culture',
+         name: "Kultur",
+         subcategories: {
+           museums: { name: "Museen", typicalProducts: ["Tickets"], standardServices: ["Führungen"] },
+           galleries: { name: "Galerien", typicalProducts: ["Kunstwerke"], standardServices: ["Workshops"] }
+         }
+       },
+       {
+         id: 'education',
+         name: "Bildung",
+         subcategories: {
+           schools: { name: "Schulen", typicalProducts: [], standardServices: ["Nachhilfe"] },
+           libraries: { name: "Bibliotheken", typicalProducts: ["Bücher"], standardServices: ["Ausleihe"] }
+         }
+       },
+
        {
          id: 'health',
          name: "Gesundheit",
@@ -306,7 +361,64 @@ export default function DatabaseAdmin() {
     }
 
     try {
-      const categories = ['health', 'household', 'crafts', 'associations', 'social', 'services', 'legal'];
+      const categories = [
+       {
+         id: 'health',
+         name: "Gesundheit",
+         subcategories: {
+           pharmacy: { name: "Apotheken", typicalProducts: ["Medikamente", "Nahrungsergänzungsmittel"], standardServices: ["Beratung", "Blutdruckmessung"] },
+           fitness: { name: "Fitnessstudios", typicalProducts: ["Mitgliedschaften"], standardServices: ["Kurse", "Personal Training"] }
+         }
+       },
+       {
+         id: 'leisure',
+         name: "Freizeit",
+         subcategories: {
+           parks: { name: "Parks", typicalProducts: [], standardServices: ["Grillplätze", "Sportplätze"] },
+           cinema: { name: "Kinos", typicalProducts: ["Tickets"], standardServices: ["Filmpremieren"] }
+         }
+       },
+       {
+         id: 'handcrafts',
+         name: "Handwerk",
+         subcategories: {
+           carpentry: { name: "Schreinerei", typicalProducts: ["Möbel"], standardServices: ["Reparaturen"] },
+           painting: { name: "Maler", typicalProducts: ["Farben"], standardServices: ["Renovierungen"] }
+         }
+       },
+       {
+         id: 'services',
+         name: "Dienstleistungen",
+         subcategories: {
+           it: { name: "IT-Services", typicalProducts: ["Software"], standardServices: ["Support"] },
+           cleaning: { name: "Reinigungsdienste", typicalProducts: ["Reinigungsgeräte"], standardServices: ["Haushaltsreinigung"] }
+         }
+       },
+       {
+         id: 'shop',
+         name: "Shop",
+         subcategories: {
+           fashion: { name: "Mode", typicalProducts: ["Kleidung"], standardServices: ["Beratung"] },
+           electronics: { name: "Elektronik", typicalProducts: ["Geräte"], standardServices: ["Reparaturen"] }
+         }
+       },
+       {
+         id: 'culture',
+         name: "Kultur",
+         subcategories: {
+           museums: { name: "Museen", typicalProducts: ["Tickets"], standardServices: ["Führungen"] },
+           galleries: { name: "Galerien", typicalProducts: ["Kunstwerke"], standardServices: ["Workshops"] }
+         }
+       },
+       {
+         id: 'education',
+         name: "Bildung",
+         subcategories: {
+           schools: { name: "Schulen", typicalProducts: [], standardServices: ["Nachhilfe"] },
+           libraries: { name: "Bibliotheken", typicalProducts: ["Bücher"], standardServices: ["Ausleihe"] }
+         }
+       }
+,'health', 'household', 'crafts', 'associations', 'social', 'services', 'legal'];
       const statuses = ['available', 'out_of_stock', 'discontinued'];
       const types = ['product', 'service'];
       
