@@ -1,3 +1,4 @@
+// CategoryNav.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -9,9 +10,11 @@ interface Category {
   name: string;
 }
 
-export default function CategoryNav({ onSelectCategory }: { 
-  onSelectCategory: (categoryId: string | null) => void 
-}) {
+interface CategoryNavProps {
+  onSelectCategory: (categoryId: string | null) => void;
+}
+
+export default function CategoryNav({ onSelectCategory }: CategoryNavProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -37,17 +40,33 @@ export default function CategoryNav({ onSelectCategory }: {
     onSelectCategory(categoryId);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const firstProduct = document.querySelector('[data-grid-item]');
+      if (firstProduct instanceof HTMLElement) {
+        firstProduct.focus();
+      }
+    }
+  };
+
   return (
-    <nav className="bg-white shadow-lg mb-6">
+    <nav 
+      className="bg-white shadow-lg mb-6" 
+      role="navigation" 
+      aria-label="Produktkategorien"
+    >
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex overflow-x-auto py-4 space-x-4">
           <button
             onClick={() => handleCategoryClick(null)}
+            onKeyDown={handleKeyDown}
             className={`px-4 py-2 rounded-full whitespace-nowrap ${
               selectedCategory === null 
                 ? 'bg-blue-500 text-white' 
                 : 'bg-gray-100 hover:bg-gray-200'
             }`}
+            aria-pressed={selectedCategory === null}
           >
             Alle Produkte
           </button>
@@ -55,11 +74,13 @@ export default function CategoryNav({ onSelectCategory }: {
             <button
               key={category.id}
               onClick={() => handleCategoryClick(category.id)}
+              onKeyDown={handleKeyDown}
               className={`px-4 py-2 rounded-full whitespace-nowrap ${
                 selectedCategory === category.id 
                   ? 'bg-blue-500 text-white' 
                   : 'bg-gray-100 hover:bg-gray-200'
               }`}
+              aria-pressed={selectedCategory === category.id}
             >
               {category.name}
             </button>
